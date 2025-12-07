@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .result {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #ddd;
+        }
+        
+        .info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>Save Editor</h1>
+    
+    <div class="info">
+        <strong>Note:</strong> This tool works without JavaScript in text browsers. The processed text will appear below after submission. To download, copy the result text manually. URL parameters supported: ?text=...&find=...&replace=...
+    </div>
+    
+    <div class="container">
+        <form method="GET" action="">
+            <label for="input_text">Input Text:</label>
+            <textarea id="input_text" name="text" placeholder="Enter your text here">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+            
+            <label for="find">Find (word to replace):</label>
+            <input type="text" id="find" name="find" value="" placeholder="Word to find">
+            
+            <label for="replace">Replace (replacement word):</label>
+            <input type="text" id="replace" name="replace" value="" placeholder="Replacement word">
+            
+            <button type="submit">Process Text</button>
+        </form>
+    </div>
+    
+    <noscript>
+        <p><em>JavaScript is disabled - this is fine, the editor will work using URL parameters.</em></p>
+    </noscript>
+    
+    <script>
+        // Progressive enhancement: populate form from URL params
+        const params = new URLSearchParams(window.location.search);
+        const text = params.get('text');
+        const find = params.get('find');
+        const replace = params.get('replace');
+        
+        if (text !== null) document.getElementById('input_text').value = text;
+        if (find !== null) document.getElementById('find').value = find;
+        if (replace !== null) document.getElementById('replace').value = replace;
+        
+        // Show result if all params present
+        if (text && find !== null) {
+            const replaceValue = replace || '';
+            const processed = text.split(find).join(replaceValue);
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'container';
+            resultDiv.innerHTML = `
+                <h2>Processed Result:</h2>
+                <div class="result">${escapeHtml(processed)}</div>
+                <a href="data:text/plain;charset=utf-8,${encodeURIComponent(processed)}" 
+                   download="edited_save.txt" 
+                   style="display: inline-block; margin-top: 15px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">
+                   Download Result
+                </a>
+                <p style="margin-top: 10px;"><small>To copy: Select the text above and use Ctrl+C (or Cmd+C on Mac)</small></p>
+            `;
+            document.body.appendChild(resultDiv);
+            
+            // Auto-download the file
+            const link = document.createElement('a');
+            link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(processed);
+            link.download = 'edited_save.txt';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Intercept form submission to process in-page
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const text = document.getElementById('input_text').value;
+            const find = document.getElementById('find').value;
+            const replace = document.getElementById('replace').value;
+            
+            if (text && find !== null) {
+                const replaceValue = replace || '';
+                const processed = text.split(find).join(replaceValue);
+                
+                // Remove old result if exists
+                const oldResult = document.querySelector('.container:last-of-type');
+                if (oldResult && oldResult.querySelector('h2')) {
+                    oldResult.remove();
+                }
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'container';
+                resultDiv.innerHTML = `
+                    <h2>Processed Result:</h2>
+                    <div class="result">${escapeHtml(processed)}</div>
+                    <a href="data:text/plain;charset=utf-8,${encodeURIComponent(processed)}" 
+                       download="edited_save.txt" 
+                       style="display: inline-block; margin-top: 15px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">
+                       Download Result
+                    </a>
+                    <p style="margin-top: 10px;"><small>To copy: Select the text above and use Ctrl+C (or Cmd+C on Mac)</small></p>
+                `;
+                document.body.appendChild(resultDiv);
+                
+                // Auto-download the file
+                const link = document.createElement('a');
+                link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(processed);
+                link.download = 'edited_save.txt';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        });
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // File upload enhancement
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.id = 'file_input';
+        fileInput.accept = '.txt';
+        fileInput.style.cssText = 'width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box;';
+        
+        const fileLabel = document.createElement('label');
+        fileLabel.textContent = 'Or Upload File:';
+        fileLabel.style.cssText = 'display: block; margin-top: 15px; font-weight: bold;';
+        fileLabel.setAttribute('for', 'file_input');
+        
+        const findLabel = document.querySelector('label[for="find"]');
+        findLabel.parentNode.insertBefore(fileInput, findLabel);
+        findLabel.parentNode.insertBefore(fileLabel, fileInput);
+        
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('input_text').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>
