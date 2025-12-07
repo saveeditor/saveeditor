@@ -27,6 +27,7 @@
         }
         
         input[type="text"],
+        input[type="email"],
         textarea {
             width: 100%;
             padding: 8px;
@@ -37,6 +38,10 @@
             font-family: monospace;
         }
         
+        input[type="email"] {
+            font-family: Arial, sans-serif;
+        }
+        
         textarea {
             min-height: 150px;
             resize: vertical;
@@ -44,6 +49,7 @@
         
         button {
             margin-top: 15px;
+            margin-right: 10px;
             padding: 10px 20px;
             background: #007bff;
             color: white;
@@ -51,6 +57,10 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+        }
+        
+        button:hover {
+            background: #0056b3;
         }
         
         .result {
@@ -76,11 +86,11 @@
     <h1>Save Editor</h1>
     
     <div class="info">
-        <strong>Note:</strong> This tool works without JavaScript in text browsers. The processed text will appear below after submission. To download, copy the result text manually. URL parameters supported: ?text=...&find=...&replace=...
+        <strong>Note:</strong> Without JavaScript, the email function will open your email client with the unprocessed form data. With JavaScript enabled, text is processed first before emailing or downloading.
     </div>
     
     <div class="container">
-        <form method="GET" action="">
+        <form method="POST" action="" enctype="text/plain" id="mainForm">
             <label for="input_text">Input Text:</label>
             <textarea id="input_text" name="text" placeholder="Enter your text here">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
             
@@ -90,31 +100,76 @@
             <label for="replace">Replace (replacement word):</label>
             <input type="text" id="replace" name="replace" value="" placeholder="Replacement word">
             
-            <button type="submit">Process Text</button>
+            <label for="email">Email Address (for sending via email):</label>
+            <input type="email" id="email" name="email" value="" placeholder="your@email.com">
+            
+            <button type="button" id="processBtn">Process & Download</button>
+            <button type="submit" id="emailBtn">Send via Email</button>
         </form>
     </div>
     
     <noscript>
-        <p><em>JavaScript is disabled - this is fine, the editor will work using URL parameters.</em></p>
+        <p><em>JavaScript is disabled. The email button will open your email client with unprocessed form data.</em></p>
     </noscript>
     
     <script>
-        // Progressive enhancement: populate form from URL params
+        // Get URL parameters
         const params = new URLSearchParams(window.location.search);
         const text = params.get('text');
         const find = params.get('find');
         const replace = params.get('replace');
+        const email = params.get('email');
         
         if (text !== null) document.getElementById('input_text').value = text;
         if (find !== null) document.getElementById('find').value = find;
         if (replace !== null) document.getElementById('replace').value = replace;
+        if (email !== null) document.getElementById('email').value = email;
         
-        // Show result if all params present
-        if (text && find !== null) {
-            const replaceValue = replace || '';
-            const processed = text.split(find).join(replaceValue);
+        // Handle email button with JS
+        document.getElementById('emailBtn').addEventListener('click', function(e) {
+            e.preventDefault();
             
+            const text = document.getElementById('input_text').value;
+            const find = document.getElementById('find').value;
+            const replace = document.getElementById('replace').value;
+            const email = document.getElementById('email').value;
+            
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            // Process the text
+            const replaceValue = replace || '';
+            const processed = find ? text.split(find).join(replaceValue) : text;
+            
+            // Create mailto link with processed text
+            const subject = encodeURIComponent('Processed Save File');
+            const body = encodeURIComponent('Processed Text:\n\n' + processed);
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        });
+        
+        // Handle process & download button
+        document.getElementById('processBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const text = document.getElementById('input_text').value;
+            const find = document.getElementById('find').value;
+            const replace = document.getElementById('replace').value;
+            
+            // Process the text
+            const replaceValue = replace || '';
+            const processed = find ? text.split(find).join(replaceValue) : text;
+            
+            // Remove old result if exists
+            const oldResult = document.getElementById('resultContainer');
+            if (oldResult) {
+                oldResult.remove();
+            }
+            
+            // Show result
             const resultDiv = document.createElement('div');
+            resultDiv.id = 'resultContainer';
             resultDiv.className = 'container';
             resultDiv.innerHTML = `
                 <h2>Processed Result:</h2>
@@ -136,49 +191,6 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
-        
-        // Intercept form submission to process in-page
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const text = document.getElementById('input_text').value;
-            const find = document.getElementById('find').value;
-            const replace = document.getElementById('replace').value;
-            
-            if (text && find !== null) {
-                const replaceValue = replace || '';
-                const processed = text.split(find).join(replaceValue);
-                
-                // Remove old result if exists
-                const oldResult = document.querySelector('.container:last-of-type');
-                if (oldResult && oldResult.querySelector('h2')) {
-                    oldResult.remove();
-                }
-                
-                const resultDiv = document.createElement('div');
-                resultDiv.className = 'container';
-                resultDiv.innerHTML = `
-                    <h2>Processed Result:</h2>
-                    <div class="result">${escapeHtml(processed)}</div>
-                    <a href="data:text/plain;charset=utf-8,${encodeURIComponent(processed)}" 
-                       download="edited_save.txt" 
-                       style="display: inline-block; margin-top: 15px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">
-                       Download Result
-                    </a>
-                    <p style="margin-top: 10px;"><small>To copy: Select the text above and use Ctrl+C (or Cmd+C on Mac)</small></p>
-                `;
-                document.body.appendChild(resultDiv);
-                
-                // Auto-download the file
-                const link = document.createElement('a');
-                link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(processed);
-                link.download = 'edited_save.txt';
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
         });
         
         function escapeHtml(text) {
@@ -211,6 +223,15 @@
                     document.getElementById('input_text').value = e.target.result;
                 };
                 reader.readAsText(file);
+            }
+        });
+        
+        // Update form action for mailto when JS is disabled (fallback)
+        const emailInput = document.getElementById('email');
+        emailInput.addEventListener('input', function() {
+            const form = document.getElementById('mainForm');
+            if (emailInput.value) {
+                form.setAttribute('action', 'mailto:' + emailInput.value);
             }
         });
     </script>
