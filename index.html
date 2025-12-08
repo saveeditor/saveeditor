@@ -2,238 +2,125 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Save Editor</title>
+    <title>Kana Tables</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-            line-height: 1.6;
-        }
-        
-        .container {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: monospace;
-        }
-        
-        input[type="email"] {
-            font-family: Arial, sans-serif;
-        }
-        
-        textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        button {
-            margin-top: 15px;
-            margin-right: 10px;
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        button:hover {
-            background: #0056b3;
-        }
-        
-        .result {
-            background: white;
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 20px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            border: 1px solid #ddd;
-        }
-        
-        .info {
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #ffc107;
-        }
+        .tab-input { display: none; }
+        .tab-content { display: none; }
+        #tab-hiragana:checked ~ .tab-contents #content-hiragana,
+        #tab-katakana:checked ~ .tab-contents #content-katakana { display: block; }
+        table { border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 5px; }
     </style>
 </head>
 <body>
-    <h1>Save Editor</h1>
+    <h1>Kana Tables</h1>
     
-    <div class="info">
-        <strong>Note:</strong> Without JavaScript, the email function will open your email client with the unprocessed form data. With JavaScript enabled, text is processed first before emailing or downloading.
+    <input type="radio" name="tabs" id="tab-hiragana" class="tab-input" checked>
+    <input type="radio" name="tabs" id="tab-katakana" class="tab-input">
+    
+    <label for="tab-hiragana">Hiragana</label>
+    <label for="tab-katakana">Katakana</label>
+    
+    <div class="tab-contents">
+        <div id="content-hiragana" class="tab-content">
+            <div style="display: flex; gap: 20px;">
+                <div>
+                    <h2>Basic Hiragana</h2>
+                    <table>
+                        <tr><th></th><th>a</th><th>i</th><th>u</th><th>e</th><th>o</th></tr>
+                        <tr><th></th><td>あ a</td><td>い i</td><td>う u</td><td>え e</td><td>お o</td></tr>
+                        <tr><th>k</th><td>か ka</td><td>き ki</td><td>く ku</td><td>け ke</td><td>こ ko</td></tr>
+                        <tr><th>s</th><td>さ sa</td><td>し shi</td><td>す su</td><td>せ se</td><td>そ so</td></tr>
+                        <tr><th>t</th><td>た ta</td><td>ち chi</td><td>つ tsu</td><td>て te</td><td>と to</td></tr>
+                        <tr><th>n</th><td>な na</td><td>に ni</td><td>ぬ nu</td><td>ね ne</td><td>の no</td></tr>
+                        <tr><th>h</th><td>は ha</td><td>ひ hi</td><td>ふ fu</td><td>へ he</td><td>ほ ho</td></tr>
+                        <tr><th>m</th><td>ま ma</td><td>み mi</td><td>む mu</td><td>め me</td><td>も mo</td></tr>
+                        <tr><th>y</th><td>や ya</td><td></td><td>ゆ yu</td><td></td><td>よ yo</td></tr>
+                        <tr><th>r</th><td>ら ra</td><td>り ri</td><td>る ru</td><td>れ re</td><td>ろ ro</td></tr>
+                        <tr><th>w</th><td>わ wa</td><td></td><td></td><td></td><td>を wo</td></tr>
+                        <tr><th>n</th><td colspan="5">ん n</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <h2>Dakuten</h2>
+                    <table>
+                        <tr><th></th><th>a</th><th>i</th><th>u</th><th>e</th><th>o</th></tr>
+                        <tr><th>g</th><td>が ga</td><td>ぎ gi</td><td>ぐ gu</td><td>げ ge</td><td>ご go</td></tr>
+                        <tr><th>z</th><td>ざ za</td><td>じ ji</td><td>ず zu</td><td>ぜ ze</td><td>ぞ zo</td></tr>
+                        <tr><th>d</th><td>だ da</td><td>ぢ ji</td><td>づ zu</td><td>で de</td><td>ど do</td></tr>
+                        <tr><th>b</th><td>ば ba</td><td>び bi</td><td>ぶ bu</td><td>べ be</td><td>ぼ bo</td></tr>
+                        <tr><th>p</th><td>ぱ pa</td><td>ぴ pi</td><td>ぷ pu</td><td>ぺ pe</td><td>ぽ po</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <h2>Combinations</h2>
+                    <table>
+                        <tr><th></th><th>ya</th><th>yu</th><th>yo</th></tr>
+                        <tr><th>k</th><td>きゃ kya</td><td>きゅ kyu</td><td>きょ kyo</td></tr>
+                        <tr><th>s</th><td>しゃ sha</td><td>しゅ shu</td><td>しょ sho</td></tr>
+                        <tr><th>t</th><td>ちゃ cha</td><td>ちゅ chu</td><td>ちょ cho</td></tr>
+                        <tr><th>n</th><td>にゃ nya</td><td>にゅ nyu</td><td>にょ nyo</td></tr>
+                        <tr><th>h</th><td>ひゃ hya</td><td>ひゅ hyu</td><td>ひょ hyo</td></tr>
+                        <tr><th>m</th><td>みゃ mya</td><td>みゅ myu</td><td>みょ myo</td></tr>
+                        <tr><th>r</th><td>りゃ rya</td><td>りゅ ryu</td><td>りょ ryo</td></tr>
+                        <tr><th>g</th><td>ぎゃ gya</td><td>ぎゅ gyu</td><td>ぎょ gyo</td></tr>
+                        <tr><th>j</th><td>じゃ ja</td><td>じゅ ju</td><td>じょ jo</td></tr>
+                        <tr><th>b</th><td>びゃ bya</td><td>びゅ byu</td><td>びょ byo</td></tr>
+                        <tr><th>p</th><td>ぴゃ pya</td><td>ぴゅ pyu</td><td>ぴょ pyo</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-katakana" class="tab-content">
+            <div style="display: flex; gap: 20px;">
+                <div>
+                    <h2>Basic Katakana</h2>
+                    <table>
+                        <tr><th></th><th>a</th><th>i</th><th>u</th><th>e</th><th>o</th></tr>
+                        <tr><th></th><td>ア a</td><td>イ i</td><td>ウ u</td><td>エ e</td><td>オ o</td></tr>
+                        <tr><th>k</th><td>カ ka</td><td>キ ki</td><td>ク ku</td><td>ケ ke</td><td>コ ko</td></tr>
+                        <tr><th>s</th><td>サ sa</td><td>シ shi</td><td>ス su</td><td>セ se</td><td>ソ so</td></tr>
+                        <tr><th>t</th><td>タ ta</td><td>チ chi</td><td>ツ tsu</td><td>テ te</td><td>ト to</td></tr>
+                        <tr><th>n</th><td>ナ na</td><td>ニ ni</td><td>ヌ nu</td><td>ネ ne</td><td>ノ no</td></tr>
+                        <tr><th>h</th><td>ハ ha</td><td>ヒ hi</td><td>フ fu</td><td>ヘ he</td><td>ホ ho</td></tr>
+                        <tr><th>m</th><td>マ ma</td><td>ミ mi</td><td>ム mu</td><td>メ me</td><td>モ mo</td></tr>
+                        <tr><th>y</th><td>ヤ ya</td><td></td><td>ユ yu</td><td></td><td>ヨ yo</td></tr>
+                        <tr><th>r</th><td>ラ ra</td><td>リ ri</td><td>ル ru</td><td>レ re</td><td>ロ ro</td></tr>
+                        <tr><th>w</th><td>ワ wa</td><td></td><td></td><td></td><td>ヲ wo</td></tr>
+                        <tr><th>n</th><td colspan="5">ン n</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <h2>Dakuten</h2>
+                    <table>
+                        <tr><th></th><th>a</th><th>i</th><th>u</th><th>e</th><th>o</th></tr>
+                        <tr><th>g</th><td>ガ ga</td><td>ギ gi</td><td>グ gu</td><td>ゲ ge</td><td>ゴ go</td></tr>
+                        <tr><th>z</th><td>ザ za</td><td>ジ ji</td><td>ズ zu</td><td>ゼ ze</td><td>ゾ zo</td></tr>
+                        <tr><th>d</th><td>ダ da</td><td>ヂ ji</td><td>ヅ zu</td><td>デ de</td><td>ド do</td></tr>
+                        <tr><th>b</th><td>バ ba</td><td>ビ bi</td><td>ブ bu</td><td>ベ be</td><td>ボ bo</td></tr>
+                        <tr><th>p</th><td>パ pa</td><td>ピ pi</td><td>プ pu</td><td>ペ pe</td><td>ポ po</td></tr>
+                    </table>
+                </div>
+                <div>
+                    <h2>Combinations</h2>
+                    <table>
+                        <tr><th></th><th>ya</th><th>yu</th><th>yo</th></tr>
+                        <tr><th>k</th><td>キャ kya</td><td>キュ kyu</td><td>キョ kyo</td></tr>
+                        <tr><th>s</th><td>シャ sha</td><td>シュ shu</td><td>ショ sho</td></tr>
+                        <tr><th>t</th><td>チャ cha</td><td>チュ chu</td><td>チョ cho</td></tr>
+                        <tr><th>n</th><td>ニャ nya</td><td>ニュ nyu</td><td>ニョ nyo</td></tr>
+                        <tr><th>h</th><td>ヒャ hya</td><td>ヒュ hyu</td><td>ヒョ hyo</td></tr>
+                        <tr><th>m</th><td>ミャ mya</td><td>ミュ myu</td><td>ミョ myo</td></tr>
+                        <tr><th>r</th><td>リャ rya</td><td>リュ ryu</td><td>リョ ryo</td></tr>
+                        <tr><th>g</th><td>ギャ gya</td><td>ギュ gyu</td><td>ギョ gyo</td></tr>
+                        <tr><th>j</th><td>ジャ ja</td><td>ジュ ju</td><td>ジョ jo</td></tr>
+                        <tr><th>b</th><td>ビャ bya</td><td>ビュ byu</td><td>ビョ byo</td></tr>
+                        <tr><th>p</th><td>ピャ pya</td><td>ピュ pyu</td><td>ピョ pyo</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="container">
-        <form method="POST" action="" enctype="text/plain" id="mainForm">
-            <label for="input_text">Input Text:</label>
-            <textarea id="input_text" name="text" placeholder="Enter your text here">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
-            
-            <label for="find">Find (word to replace):</label>
-            <input type="text" id="find" name="find" value="" placeholder="Word to find">
-            
-            <label for="replace">Replace (replacement word):</label>
-            <input type="text" id="replace" name="replace" value="" placeholder="Replacement word">
-            
-            <label for="email">Email Address (for sending via email):</label>
-            <input type="email" id="email" name="email" value="" placeholder="your@email.com">
-            
-            <button type="button" id="processBtn">Process & Download</button>
-            <button type="submit" id="emailBtn">Send via Email</button>
-        </form>
-    </div>
-    
-    <noscript>
-        <p><em>JavaScript is disabled. The email button will open your email client with unprocessed form data.</em></p>
-    </noscript>
-    
-    <script>
-        // Get URL parameters
-        const params = new URLSearchParams(window.location.search);
-        const text = params.get('text');
-        const find = params.get('find');
-        const replace = params.get('replace');
-        const email = params.get('email');
-        
-        if (text !== null) document.getElementById('input_text').value = text;
-        if (find !== null) document.getElementById('find').value = find;
-        if (replace !== null) document.getElementById('replace').value = replace;
-        if (email !== null) document.getElementById('email').value = email;
-        
-        // Handle email button with JS
-        document.getElementById('emailBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const text = document.getElementById('input_text').value;
-            const find = document.getElementById('find').value;
-            const replace = document.getElementById('replace').value;
-            const email = document.getElementById('email').value;
-            
-            if (!email) {
-                alert('Please enter an email address');
-                return;
-            }
-            
-            // Process the text
-            const replaceValue = replace || '';
-            const processed = find ? text.split(find).join(replaceValue) : text;
-            
-            // Create mailto link with processed text
-            const subject = encodeURIComponent('Processed Save File');
-            const body = encodeURIComponent('Processed Text:\n\n' + processed);
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-        });
-        
-        // Handle process & download button
-        document.getElementById('processBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const text = document.getElementById('input_text').value;
-            const find = document.getElementById('find').value;
-            const replace = document.getElementById('replace').value;
-            
-            // Process the text
-            const replaceValue = replace || '';
-            const processed = find ? text.split(find).join(replaceValue) : text;
-            
-            // Remove old result if exists
-            const oldResult = document.getElementById('resultContainer');
-            if (oldResult) {
-                oldResult.remove();
-            }
-            
-            // Show result
-            const resultDiv = document.createElement('div');
-            resultDiv.id = 'resultContainer';
-            resultDiv.className = 'container';
-            resultDiv.innerHTML = `
-                <h2>Processed Result:</h2>
-                <div class="result">${escapeHtml(processed)}</div>
-                <a href="data:text/plain;charset=utf-8,${encodeURIComponent(processed)}" 
-                   download="edited_save.txt" 
-                   style="display: inline-block; margin-top: 15px; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">
-                   Download Result
-                </a>
-                <p style="margin-top: 10px;"><small>To copy: Select the text above and use Ctrl+C (or Cmd+C on Mac)</small></p>
-            `;
-            document.body.appendChild(resultDiv);
-            
-            // Auto-download the file
-            const link = document.createElement('a');
-            link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(processed);
-            link.download = 'edited_save.txt';
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // File upload enhancement
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.id = 'file_input';
-        fileInput.accept = '.txt';
-        fileInput.style.cssText = 'width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box;';
-        
-        const fileLabel = document.createElement('label');
-        fileLabel.textContent = 'Or Upload File:';
-        fileLabel.style.cssText = 'display: block; margin-top: 15px; font-weight: bold;';
-        fileLabel.setAttribute('for', 'file_input');
-        
-        const findLabel = document.querySelector('label[for="find"]');
-        findLabel.parentNode.insertBefore(fileInput, findLabel);
-        findLabel.parentNode.insertBefore(fileLabel, fileInput);
-        
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('input_text').value = e.target.result;
-                };
-                reader.readAsText(file);
-            }
-        });
-        
-        // Update form action for mailto when JS is disabled (fallback)
-        const emailInput = document.getElementById('email');
-        emailInput.addEventListener('input', function() {
-            const form = document.getElementById('mainForm');
-            if (emailInput.value) {
-                form.setAttribute('action', 'mailto:' + emailInput.value);
-            }
-        });
-    </script>
 </body>
 </html>
